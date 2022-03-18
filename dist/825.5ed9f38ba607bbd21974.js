@@ -1,0 +1,1 @@
+"use strict";(self["webpackChunkvue3_ssr_boilerplate"]=self["webpackChunkvue3_ssr_boilerplate"]||[]).push([[825],{2825:(e,r,s)=>{s.r(r),s.d(r,{default:()=>c});var u=s(6252);function l(e,r,s,l,n,t){return(0,u.wg)(),(0,u.iD)("div",null,"Home")}const n={};var t=s(3370);const a=(0,t.Z)(n,[["render",l]]),c=a}}]);

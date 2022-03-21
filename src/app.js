@@ -4,15 +4,10 @@ import { _createStore } from './store';
 import App from './App.vue';
 import { sync } from 'vuex-router-sync';
 
-
 export function _createApp() {
   const app = createSSRApp(App),
     router = _createRouter(),
     store = _createStore();
-
-  app.config.compilerOptions.isCustomElement = (tag) => {
-    return tag.startsWith("amp-")
-  }
 
   sync(store, router);
   app

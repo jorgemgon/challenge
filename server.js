@@ -5,7 +5,7 @@ const favicon = require('serve-favicon')
 const compression = require('compression')
 const resolve = (file) => path.resolve(__dirname, file);
 
-const {createRenderer, renderPage, isProd, port } = require('./helpers')
+const { createRenderer, renderPage, isProd, port } = require('./helpers')
 
 let renderer, readyPromise;
 
@@ -14,7 +14,7 @@ if (isProd) {
   const clientManifest = require('./dist/vue-ssr-client-manifest.json');
 
   renderer = createRenderer(bundle, { clientManifest });
-  
+
 } else {
   readyPromise = require('./build/setup-dev-server')(app, (bundle, options) => {
     renderer = createRenderer(bundle, options);
@@ -23,8 +23,8 @@ if (isProd) {
 
 const serve = (path, cache) => {
   return express.static(resolve(path), {
-      maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0,
-      fallthrough: false // It doesn't allow go throw
+    maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0,
+    fallthrough: false // It doesn't allow go throw
   });
 }
 
@@ -33,6 +33,32 @@ app.use(favicon('./public/images/favicon.ico'))
 
 app.use('/dist', serve('./dist', true));
 app.use('/public', serve('./public', true));
+app.use('/data', (req, res) => {
+  res.json({
+    "items": [
+      {
+        "id": 1,
+        "title": "AMP YouTube Channel",
+        "url": "https://www.youtube.com/channel/UCXPBsjgKKG2HqsKBhWA4uQw"
+      },
+      {
+        "id": 2,
+        "title": "AMPproject.org",
+        "url": "https://www.ampproject.org/"
+      },
+      {
+        "id": 3,
+        "title": "AMP By Example",
+        "url": "https://ampbyexample.com/"
+      },
+      {
+        "id": 4,
+        "title": "AMP Start",
+        "url": "https://ampstart.com/"
+      }
+    ]
+  });
+});
 
 async function render(req, res) {
   if (req.originalUrl === '/ww.js.map') return res.send(null);
@@ -43,7 +69,7 @@ async function render(req, res) {
     console.log('[Error]', err);
 
     if (err.url) {
-      if(err.code){
+      if (err.code) {
         return res.redirect(err.code, err.url)
       } else {
         return res.redirect(err.url)
@@ -74,16 +100,16 @@ async function render(req, res) {
   context.scripts = context.inject ? renderScripts() : null;
 
   const html = renderPage(context);
-  
+
   res.send(html);
 }
 
 app.get('*', isProd ? render : async (req, res) => {
-    await readyPromise;
-    render(req, res);
-  }
+  await readyPromise;
+  render(req, res);
+}
 );
 
 app.listen(port, () => {
-    console.log(`Server started at localhost:${port}`);
+  console.log(`Server started at localhost:${port}`);
 });

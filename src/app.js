@@ -16,6 +16,18 @@ export function _createApp() {
   const apolloProvider = new VueApollo({
     defaultClient: apolloClient,
   })
+  
+  app.component('amp-script', {
+    props: {
+      state: JSON
+    },
+    computed: {
+      stateStringify() {
+        return JSON.stringify(this.$props.state);
+      }
+    },
+    template: `<script v-html="stateStringify"></script>`,
+  })
 
   sync(store, router);
   app

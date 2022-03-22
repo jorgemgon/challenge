@@ -4,6 +4,7 @@ const path = require('path');
 const favicon = require('serve-favicon')
 const compression = require('compression')
 const resolve = (file) => path.resolve(__dirname, file);
+const axios = require('axios')
 
 const { createRenderer, renderPage, isProd, port } = require('./helpers')
 
@@ -57,6 +58,22 @@ app.use('/data', (req, res) => {
         "url": "https://ampstart.com/"
       }
     ]
+  });
+});
+
+app.use('/countries', (req, res) => {
+  const countries = {}
+  axios
+  .post("https://countries.trevorblades.com/", {
+    query: "query countries {\n  countries {\n    code\n  }\n}\n",
+  })
+  .then(function (response) {
+    countries.value = {items: response.data.data.countries};
+    console.log("Lista carregada");
+    res.send(countries.value);
+  })
+  .catch(function (error) {
+    console.log("Erro : " + countries);
   });
 });
 

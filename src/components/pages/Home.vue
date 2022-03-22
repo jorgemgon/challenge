@@ -1,40 +1,61 @@
 
 <template>
   <div>
-    <amp-state>
-      <component
-        is="amp-script"
-        :state="data"
-        type="application/json"
-      ></component>
-    </amp-state>
-    <amp-list width="auto" height="100" layout="fixed-height" src="/data">
-      <template type="amp-mustache" v-pre>
-        <div class="url-entry">
-          <a href="{{url}}">{{ title }}</a>
-        </div>
-      </template>
-    </amp-list>
+    <div>
+      <amp-state id="staticList">
+        <component
+          is="amp-script"
+          :state="data"
+          type="application/json"
+        ></component>
+      </amp-state>
+      <amp-list width="auto" height="100" layout="fixed-height" src="/data">
+        <template type="amp-mustache" v-pre>
+          <div class="url-entry">
+            <a href="{{url}}">{{ title }}</a>
+          </div>
+        </template>
+      </amp-list>
+    </div>
+    <div>
+      <amp-state id="countriesState">
+        <component
+          is="amp-script"
+          :state="countries.value"
+          type="application/json"
+        ></component>
+      </amp-state>
+      <amp-list
+        width="auto"
+        height="100"
+        layout="fixed-height"
+        src="amp-state:countriesState"
+      >
+        <template type="amp-mustache" v-pre>
+          <div class="url-entry">
+            {{ name }}
+          </div>
+        </template>
 
-    <amp-state id="countriesState">
-      <component
-        is="amp-script"
-        :state="countries.value"
-        type="application/json"
-      ></component>
-    </amp-state>
-    <amp-list
-      width="auto"
-      height="100"
-      layout="fixed-height"
-      src="amp-state:countriesState"
-    >
-      <template type="amp-mustache" v-pre>
-        <div class="url-entry">
-          {{ name }}
+        <div overflow class="list-overflow" style="background-color: red">
+          See more
         </div>
-      </template>
-    </amp-list>
+      </amp-list>
+    </div>
+    <div>
+      <amp-list
+        width="auto"
+        height="100"
+        layout="fixed-height"
+        src="/countries"
+      >
+        <template type="amp-mustache" v-pre>
+          <div class="url-entry">
+            {{ code }}
+          </div>
+        </template>
+      </amp-list>
+    </div>
   </div>
 </template>
 
@@ -78,8 +99,8 @@ export default {
           query: "query countries {\n  countries {\n    name\n  }\n}\n",
         })
         .then(function (response) {
-          countries.value = {items: response.data.data.countries};
-          console.log(countries.value);
+          countries.value = { items: response.data.data.countries };
+          console.log("Lista carregada");
         })
         .catch(function (error) {
           console.log("Erro : " + countries);
